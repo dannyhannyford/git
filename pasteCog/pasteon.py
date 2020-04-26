@@ -80,7 +80,7 @@ class Pasteon(commands.Cog):
             ret.append(member_info(id=member.id, name=str(member), karmon=karmon))
         return ret
 
-    async def _check_reaction(self, reaction: discord.Reaction, count):
+    async def _check_reaction(self, reaction: discord.Reaction, count, *):
         message = reaction.message
         (author, channel, guild) = (message.author, message.channel, message.guild)
         if (reaction.emoji.id == upemoji_id):
