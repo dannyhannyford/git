@@ -14,7 +14,6 @@ from redbot.core.utils.chat_formatting import box, pagify
 upemoji_id = 397064398830829569
 downemoji_id = 272737368916754432
 channel_id = 331655111644545027
-
 class Pasteon(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -22,12 +21,6 @@ class Pasteon(commands.Cog):
         default_guild = {}
         self.config.register_guild(**default_guild)
         self.config.register_user(karmon=0)
-
-    @commands.command()
-    async def setppmonth(self, ctx: commands.Context, user: discord.Member, amount: int):
-        """Resets a user's Monthly karma."""
-        await self.config.user(user).karmon.set(amount)
-        await ctx.send("{}'s karma has been set.".format(user.display_name))
 
     @commands.command()
     async def ppmonth(self, ctx: commands.Context, top: int = 10):
@@ -80,9 +73,11 @@ class Pasteon(commands.Cog):
             ret.append(member_info(id=member.id, name=str(member), karmon=karmon))
         return ret
 
-    async def _check_reaction(self, reaction: discord.Reaction, count, user: discord.User, *):
+    async def _check_reaction(self, reaction: discord.Reaction, count):
         message = reaction.message
         (author, channel, guild) = (message.author, message.channel, message.guild)
+        if (isinstance(reaction.emoji, str)):
+            return
         if (reaction.emoji.id == upemoji_id):
             await self._add_karmon(author, count)
         if (reaction.emoji.id == downemoji_id):
@@ -97,6 +92,12 @@ class Pasteon(commands.Cog):
         lastmonth = datetime.utcnow()
         lastmonth -= timedelta(days =30)
         return lastmonth
+
+    @commands.command()
+    async def setppmonth(self, ctx: commands.Context, user: discord.Member, amount: int):
+        """Resets a user's Monthly karma."""
+        await self.config.user(user).karmon.set(amount)
+        await ctx.send("{}'s karma has been set.".format(user.display_name))
 
 def setup(bot):
     bot.add_cog(Pasteon(bot))
