@@ -11,9 +11,9 @@ from pytz import timezone
 #from .pastepoints import PastePoints
 from redbot.core.utils.chat_formatting import box, pagify
 
-upemoji_id = 397064398830829569
-downemoji_id = 272737368916754432
-channel_id = 331655111644545027
+upemoji_id = 702371543078010920
+downemoji_id = 702371815418232862
+channel_id = 702989381266309260
 class Pasteon(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -80,8 +80,10 @@ class Pasteon(commands.Cog):
         return ret
 
     async def _check_post(self, message):
-            author = message.author
-            await self._add_posts(message.author, 1)
+        if (message.author.id == self.bot.user.id or (message.attachments == [] and message.embeds == [] and re.search("http:\/\/|https:\/\/", message.content) == None)):
+            return
+        author = message.author
+        await self._add_posts(message.author, 1)
 
     async def _check_reaction(self, reaction: discord.Reaction, count):
         message = reaction.message
