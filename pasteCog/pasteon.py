@@ -11,9 +11,9 @@ from pytz import timezone
 #from .pastepoints import PastePoints
 from redbot.core.utils.chat_formatting import box, pagify
 
-upemoji_id = 702371543078010920
-downemoji_id = 702371815418232862
-channel_id = 702989381266309260
+upemoji_id = 397064398830829569
+downemoji_id = 272737368916754432
+channel_id = 331655111644545027
 class Pasteon(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
