@@ -11,9 +11,9 @@ from pytz import timezone
 #from .pastepoints import PastePoints
 from redbot.core.utils.chat_formatting import box, pagify
 
-upemoji_id = 702371543078010920
-downemoji_id = 702371815418232862
-channel_id = 702989381266309260
+upemoji_id = 397064398830829569
+downemoji_id = 272737368916754432
+channel_id = 331655111644545027
 class Pasteon(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -29,8 +29,10 @@ class Pasteon(commands.Cog):
         thirty = self.get_30_days()
         msglst = await channel.history(limit=1000, after=thirty, oldest_first = False).flatten()
         for msg in msglst:
+            await self._check_post(msg)
             for react in msg.reactions:
                 await self._check_reaction(react, react.count)
+
         '''LEADERBOARD PART'''
         reverse = True
         if top == 0:
@@ -77,20 +79,24 @@ class Pasteon(commands.Cog):
             ret.append(member_info(id=member.id, name=str(member), karmon=karmon, posts=posts))
         return ret
 
+    async def _check_post(self, message):
+            author = message.author
+            await self._add_posts(message.author, 1)
+
     async def _check_reaction(self, reaction: discord.Reaction, count):
         message = reaction.message
         (author, channel, guild) = (message.author, message.channel, message.guild)
         if (isinstance(reaction.emoji, str)):
             return
-        settings = self.config.user(author)
-        posts = await settings.posts()
-        await settings.posts.set(posts + 1)
-
         if (reaction.emoji.id == upemoji_id):
             await self._add_karmon(author, count)
         if (reaction.emoji.id == downemoji_id):
             await self._add_karmon(author, -count)
 
+    async def _add_posts(self, user:discord.User, amount:int):
+        settings = self.config.user(user)
+        posts = await settings.posts()
+        await settings.posts.set(posts + amount)
 
     async def _add_karmon(self, user: discord.User, amount: int):
         settings = self.config.user(user)
