@@ -80,11 +80,12 @@ class Pasteon(commands.Cog):
     async def _check_reaction(self, reaction: discord.Reaction, count):
         message = reaction.message
         (author, channel, guild) = (message.author, message.channel, message.guild)
+        if (isinstance(reaction.emoji, str)):
+            return
         settings = self.config.user(author)
         posts = await settings.posts()
         await settings.posts.set(posts + 1)
-        if (isinstance(reaction.emoji, str)):
-            return
+
         if (reaction.emoji.id == upemoji_id):
             await self._add_karmon(author, count)
         if (reaction.emoji.id == downemoji_id):
