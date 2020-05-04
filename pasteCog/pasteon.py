@@ -26,7 +26,7 @@ class Pasteon(commands.Cog):
     @commands.command()
     async def ppmonth(self, ctx: commands.Context, top: int = 10):
         channel = self.bot.get_channel(id = channel_id)
-        thirty = self.get_30_days()
+        thirty = self.get_month()
         msglst = await channel.history(limit=1000, after=thirty, oldest_first = False).flatten()
         for msg in msglst:
             await self._check_post(msg)
@@ -105,10 +105,10 @@ class Pasteon(commands.Cog):
         karmon = await settings.karmon()
         await settings.karmon.set(karmon + amount)
     '''past 30 days object'''
-    def get_30_days(self):
-        lastmonth = datetime.utcnow()
-        lastmonth -= timedelta(days =30)
-        return lastmonth
+    def get_month(self):
+        today = datetime.today()
+        datem = datetime(today.year, today.month, 1)
+        return datem
 
     @commands.command()
     async def setppmonth(self, ctx: commands.Context, user: discord.Member, amount: int):
